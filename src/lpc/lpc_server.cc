@@ -160,13 +160,13 @@ void LPCServer::Stop() {
         monitor_ = false;
     }
 
-    if (lpc_main_.joinable()) {
-        lpc_main_.join();
-    }
-
     if (lpc_server_) {
         CloseHandle(lpc_server_);
         lpc_server_ = NULL;
+    }
+
+    if (lpc_main_.joinable()) {
+        lpc_main_.join();
     }
 }
 
@@ -220,7 +220,7 @@ void LPCServer::LPCServerMain() {
             &lpc_client,
             NULL,
             (PPORT_MESSAGE)pRequest);
-        if (status == 0xC0000002L || status == STATUS_INVALID_HANDLE) {
+        if (status == 0xC0000002L || status == 0xC0000700L || status == STATUS_INVALID_HANDLE ) {
             break;
         }
 
